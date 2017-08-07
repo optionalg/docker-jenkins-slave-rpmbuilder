@@ -1,0 +1,88 @@
+# Custom RPM macros configuration file for building RPM packages
+# as a non-root user.
+
+
+# The %_smp_mflags macro usually contains only the -j (–jobs) option for
+# the make command, which define seotfhe number of jobs (make commands) that
+# may run simultaneously. Usually, this is set to the number of CPU cores
+# plus one. So, on a dual core CPU, the smp flags are set to -j3.
+%_smp_mflags  -j3 
+
+
+# The %__arch_install_post macro contains various checks that should be
+# run on the files in the BUILDROOT location. I trust Fedora guys and
+# use the defaults check-rpaths and check-buildroot on Fedora and CentOS.
+# This macro is optional.
+%__arch_install_post   /usr/lib/rpm/check-rpaths   /usr/lib/rpm/check-buildroot 
+
+
+# %_topdir defines the top directory to be used for RPM building purposes
+# By defaultROOT of the buildsystem
+%_topdir        %(echo $HOME)/rpmbuild 
+
+
+# %_sourcedir is where the source code tarballs, patches, etc. will be
+# placed after you do an "rpm -ivh somepackage.1.0-1.src.rpm"
+#%_sourcedir     %{_topdir}/%{name}-%{version}
+#%_sourcedir     %{_topdir}/%{name}
+
+
+# %_specdir is where the specfile gets placed when installing a src.rpm. Some
+# prefer the specfile to be in the same directory as the source tarballs, etc.
+#%_specdir       %{_sourcedir}
+
+
+# %_tmppath is where temporary scripts are placed during the RPM build
+# process as well as the %_buildroot where %install normally dumps files
+# prior to packaging up the final binary RPM's.
+%_tmppath       %{_topdir}/TMP
+#%_tmppath      %{_topdir}/tmp
+#%_tmppath      %{_sourcedir}/tmp
+
+
+# %_builddir is where source code tarballs are decompressed, and patches then
+# applied when building an RPM package.
+#%_builddir     %{_topdir}/BUILD
+#%_builddir     %{_tmppath}
+
+
+# %_buildroot is where files get placed during the %install section of spec
+# file processing prior to final packaging into rpms.  This is oddly named
+# and probably should have been called "%_installroot" back when it was
+# initially added to RPM.  Alas, it was not.
+#%_buildroot    %{_topdir}/%{_tmppath}/%{name}-%{version}-root
+
+
+# %_rpmdir is where binary RPM packages are put after being built.
+#%_rpmdir       %{_topdir}/RPMS
+#%_rpmdir       %{_sourcedir}
+
+
+# %_srcrpmdir is where src.rpm packages are put after being built.
+#%_srcrpmdir    %{_topdir}/SRPMS
+#%_srcrpmdir    %{_sourcedir}
+
+
+# %_rpmfilename defines the naming convention of the produced RPM packages,
+# and should not be modified.
+#%_rpmfilename  %%{NAME}-%%{VERSION}-%%{RELEASE}.%%{ARCH}.rpm
+
+
+# Customized tags for local builds
+# %packager is the info that will appear in the "Packager:" field in the
+# RPM header on built packages.
+# %packager     Joe Blow <joe@blow.com>
+%vendor         Oberthur Technologies R&D Poland
+%packager       Oberthur Technologies R&D Poland
+#%distribution  Personal Build
+
+
+# GNU GPG config below
+#%_signature     gpg
+#%_gpg_name      Oberthur Technologies R&D Poland <box@oberthur.com>
+#%_gpg_path      %(echo $HOME)/.gnupg
+
+
+# The following will try to create any missing directories required above
+# (Not implemented yet)
+#%make          make
